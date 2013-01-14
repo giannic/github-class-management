@@ -1,1 +1,3 @@
 django==1.4.3
+pygithub==1.10.0
+django-registration==0.8
