@@ -2,11 +2,20 @@ from django.db import models
 
 from github import Github as Api
 
+REPO_NAME_PATTERN = "hw_%s"
+TEAM_NAME_PATTERN = "team_%s"
+
+
+class MissingTeamException(Exception):
+    """Thrown when we can't find the Github Team we need"""
+    pass
+
 
 class Github(models.Model):
     """Connector to the Github API.
 
     Should only be one of these"""
+
     client_id = models.CharField(max_length=80)
     client_secret = models.CharField(max_length=80)
 
@@ -28,18 +37,31 @@ class Github(models.Model):
         api, user, org = self.get_api()
 
         # Create the repo
-        repo_name = "%s_hw" % new_user.username
+        repo_name = REPO_NAME_PATTERN % new_user.username
         description = "Homework repository for %s" % new_user.username
         repo = org.create_repo(repo_name, description=description,
-                               private=True, auto_init=True,
-                               gitignore_template="Python")
+                               private=True)
 
         # Create the team, adding repo
-        team_name = "student_%s" % new_user.username
+        team_name = TEAM_NAME_PATTERN % new_user.username
         team = org.create_team(team_name, repo_names=[repo], permission="push")
 
         # Add the user to the team
         new_user_github = api.get_user(new_user.profile.github_username)
         team.add_to_members(new_user_github)
 
+        # Add the user to the 'students' team
+        students_team = self.get_team('students')
+        students_team.add_to_members(new_user_github)
+
         return repo
+
+    def get_team(self, team_name):
+        api, user, org = self.get_api()
+
+        for team in org.get_teams():
+            if team.name == team_name:
+                return team
+
+        #couldn't find the team
+        raise MissingTeamException(team_name)
