@@ -39,5 +39,7 @@ class Github(models.Model):
         team = org.create_team(team_name, repo_names=[repo], permission="push")
 
         # Add the user to the team
-        new_user_github = api.get_user(new_user.get_profile().github_username)
+        new_user_github = api.get_user(new_user.profile.github_username)
         team.add_to_members(new_user_github)
+
+        return repo

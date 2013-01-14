@@ -7,8 +7,7 @@ from registration import signals
 
 from forms import CustomRegistrationForm
 
-from users.models import UserProfile
-
+from github_api.models import Github
 
 class CustomBackend(SimpleBackend):
     def register(self, request, **kwargs):
@@ -27,7 +26,14 @@ class CustomBackend(SimpleBackend):
 
         #profile stuff
         github_username = kwargs['github_username']
-        profile = UserProfile(user=user, github_username=github_username)
+        profile = user.profile
+        profile.github_username = github_username
+        profile.save()
+
+        gh = Github.objects.get()
+        repo = gh.create_repo(user)
+        profile.repo_url = repo.url
+
         profile.save()
 
         # authenticate() always has to be called before login(), and
