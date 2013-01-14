@@ -1,10 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
-
 
 class Assignment(models.Model):
+    """An assignment description"""
     due_date = models.DateTimeField("due date")
     name = models.CharField(max_length=80)
     url = models.URLField("website", blank=True)
@@ -14,6 +13,10 @@ class Assignment(models.Model):
 
 
 class Submission(models.Model):
+    """An individual student's submission of an assignment.
+
+    Can be more than one per student"""
+    # Should we figure out how to number these?
     user = models.ForeignKey(User)
     assignment = models.ForeignKey(Assignment)
     url = models.URLField("Github URL", blank=True)
