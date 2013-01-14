@@ -25,6 +25,7 @@ class CustomBackend(SimpleBackend):
 
         user.save()
 
+        #profile stuff
         github_username = kwargs['github_username']
         profile = UserProfile(user=user, github_username=github_username)
         profile.save()

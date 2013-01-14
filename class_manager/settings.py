@@ -129,6 +129,7 @@ INSTALLED_APPS = (
     'users',
     'assignments',
     'registration',
+    'github_api',
 )
 
 # A sample logging configuration. The only tangible logging
