@@ -163,3 +163,6 @@ LOGGING = {
 
 # for profile with auth
 AUTH_PROFILE_MODULE = "users.UserProfile"
+
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
