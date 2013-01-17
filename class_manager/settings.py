@@ -1,6 +1,7 @@
 # Django settings for class_manager project.
 
 import os
+import dj_database_url
 
 PROJECT_PATH = os.getcwd()
 
@@ -23,6 +24,10 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+heroku_db = dj_database_url.config()
+if heroku_db:
+    DATABASES['default'] = heroku_db
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name

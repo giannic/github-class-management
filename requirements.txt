@@ -1,3 +1,5 @@
 django==1.4.3
 pygithub==1.10.0
 django-registration==0.8
+dj-database-url==0.2.0
+psycopg2==2.4.5
