@@ -65,7 +65,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(PROJECT_PATH, "static")
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -76,6 +76,7 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
+    os.path.join(PROJECT_PATH, "bootstrap"),
 )
 
 # List of finder classes that know how to find static files in
@@ -131,6 +132,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
+    'crispy_forms',
     'users',
     'assignments',
     'registration',
@@ -171,3 +173,5 @@ AUTH_PROFILE_MODULE = "users.UserProfile"
 
 LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/"
+
+CRISPY_TEMPLATE_PACK = "bootstrap"
