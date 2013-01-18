@@ -10,6 +10,9 @@ class MissingTeamException(Exception):
     """Thrown when we can't find the Github Team we need"""
     pass
 
+class InvalidPullUrlException(Exception):
+    """Thrown when the user provides an invalid pull request URL"""
+    pass
 
 class Github(models.Model):
     """Connector to the Github API.
@@ -65,3 +68,17 @@ class Github(models.Model):
 
         #couldn't find the team
         raise MissingTeamException(team_name)
+
+    def acknowledge_pull(self, submit_user, url):
+        api, user, org = self.get_api()
+
+        repo_name = REPO_NAME_PATTERN % submit_user.username
+        repo = org.get_repo(repo_name)
+
+        try:
+            pull_number = int(url.split("/")[-1])
+        except ValueError:
+            raise InvalidPullUrlException(url)
+
+        pull = repo.get_pull(pull_number)
+        pull.create_issue_comment("Submission acknowledged.")

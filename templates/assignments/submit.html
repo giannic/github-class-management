@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Submit an assignment</h1>
+
+{% if error_message %}<div class="error">{{ error_message }}</div>{% endif %}
+
+{% if submission %}<div class="success">
+  <p>Submission received. Please check for the bot acknowledgement on your
+    <a href="{{ submission.github_url }}">pull request</a>.</p>
+  {% if submission.late %}
+  <p>This submission was marked late.</p>
+  {% endif %}
+</div>{% endif %}
+
+<form action="/submit/" method="post">{% csrf_token %}
+  {{ form.as_p }}
+<input type="submit" value="Submit Assignment" />
+</form>
+{% endblock %}
