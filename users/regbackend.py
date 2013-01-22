@@ -24,17 +24,23 @@ class CustomBackend(SimpleBackend):
 
         user.save()
 
-        #profile stuff
-        github_username = kwargs['github_username']
-        profile = user.profile
-        profile.github_username = github_username
-        profile.save()
+        try:
+            #profile stuff
+            github_username = kwargs['github_username']
+            profile = user.profile
+            profile.github_username = github_username
+            profile.save()
 
-        gh = Github.objects.get()
-        repo = gh.create_repo(user)
-        profile.repo_url = repo.url
+            gh = Github.objects.get()
+            repo = gh.create_repo(user)
+            profile.repo_url = repo.url
 
-        profile.save()
+            profile.save()
+
+        except Exception as e:
+            #need to delete the already created user
+            user.delete()
+            raise e
 
         # authenticate() always has to be called before login(), and
         # will return the user we just created.
