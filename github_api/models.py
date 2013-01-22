@@ -10,9 +10,11 @@ class MissingTeamException(Exception):
     """Thrown when we can't find the Github Team we need"""
     pass
 
+
 class InvalidPullUrlException(Exception):
     """Thrown when the user provides an invalid pull request URL"""
     pass
+
 
 class Github(models.Model):
     """Connector to the Github API.
@@ -39,6 +41,10 @@ class Github(models.Model):
         """Create a team and repo for a newly registered user"""
         api, user, org = self.get_api()
 
+        # First find the user
+        # If this errors, we don't want to do other things
+        new_user_github = api.get_user(new_user.profile.github_username)
+
         # Create the repo
         repo_name = REPO_NAME_PATTERN % new_user.username
         description = "Homework repository for %s" % new_user.username
@@ -50,7 +56,6 @@ class Github(models.Model):
         team = org.create_team(team_name, repo_names=[repo], permission="push")
 
         # Add the user to the team
-        new_user_github = api.get_user(new_user.profile.github_username)
         team.add_to_members(new_user_github)
 
         # Add the user to the 'students' team
