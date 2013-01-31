@@ -21,10 +21,9 @@ class Github(object):
         return self.API_URL + method
 
     def get(self, method):
-        import pdb; pdb.set_trace()
         url = self.make_url(method)
 
-        params = {}
+        params = {'per_page': "100"}
         if self.token:
             params['access_token'] = self.token
 
@@ -77,7 +76,7 @@ def clone_hw_repos(organization):
     for repo in g.get(method):
         if repo['name'].startswith("hw_"):
             print "Cloning %s" % repo['name']
-            check_call(["git", "clone", repo['ssh_url']])
+            check_call(["git", "clone", "-b", "master", repo['ssh_url']])
         else:
             print "Skipping %s" % repo['name']
 
